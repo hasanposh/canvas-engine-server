@@ -38,6 +38,12 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/artAndCraft", async (req, res) => {
+      const cursor =  artAndCraftCollection.find();
+      const results = await cursor.toArray();
+      res.send(results);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
