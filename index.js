@@ -44,12 +44,17 @@ async function run() {
       res.send(results);
     });
 
-    app.get("/artAndCraft/:id", async (req, res) => {
+    app.get("/artAndCraft/craftDetails/:id", async (req, res) => {
       const id = req.params.id;
       const result = await artAndCraftCollection.findOne({ _id: new ObjectId(id) });
       res.send(result);
     });
 
+   app.get("/artAndCraft/:id", async (req, res) => {
+     const id = req.params.id;
+     const result = await artAndCraftCollection.findOne({ _id: new ObjectId(id) });
+     res.send(result);
+   })
     app.put("/artAndCraft/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
@@ -59,8 +64,8 @@ async function run() {
         $set: {
           image: updatedCraft.image,
           item_name : updatedCraft.item_name,
-          user_name : updatedCraft.user_name,
-          user_Email : updatedCraft.user_email,
+          // user_name : updatedCraft.user_name,
+          // user_Email : updatedCraft.user_email,
           subcategory_Name : updatedCraft.subcategory_Name,
           rating : updatedCraft.rating,
           customization : updatedCraft.customization,
