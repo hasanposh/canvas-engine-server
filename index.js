@@ -44,6 +44,42 @@ async function run() {
       res.send(results);
     });
 
+    app.get("/artAndCraft/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await artAndCraftCollection.findOne({ _id: new ObjectId(id) });
+      res.send(result);
+    });
+
+    app.put("/artAndCraft/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const option = { upsert: true };
+      const updatedCraft = req.body;
+      const craft = {
+        $set: {
+          image: updatedCraft.image,
+          item_name : updatedCraft.item_name,
+          user_name : updatedCraft.user_name,
+          user_Email : updatedCraft.user_email,
+          subcategory_Name : updatedCraft.subcategory_Name,
+          rating : updatedCraft.rating,
+          customization : updatedCraft.customization,
+          description : updatedCraft.description,
+          stock_status : updatedCraft.stock_status,
+          processing_time : updatedCraft.processing_time,
+          price : updatedCraft.price
+        },
+      };
+      const result = await artAndCraftCollection.updateOne(filter, craft, option);
+      res.send(result);
+      })
+
+    app.delete("/artAndCraft/:id", async (req, res) =>{
+      const id = req.params.id;
+      const result = await artAndCraftCollection.deleteOne({ _id: new ObjectId(id) });
+      res.send(result);
+    })
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
