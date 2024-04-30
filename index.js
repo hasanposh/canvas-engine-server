@@ -36,6 +36,15 @@ async function run() {
       .db("categoriesDB")
       .collection("categories");
 
+
+
+      app.get("/", (req, res) => {
+        res.send("My Art And Craft Server is running ");
+      });
+
+
+
+
     app.post("/artAndCraft", async (req, res) => {
       const newArtAndCraft = req.body;
       const result = await artAndCraftCollection.insertOne(newArtAndCraft);
@@ -127,10 +136,9 @@ async function run() {
 }
 run().catch(console.dir);
 
-app.get("/", (req, res) => {
-  res.send("My Art And Craft Server is running ");
-});
 
+run().then(() => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
-});
+})
+}).catch(console.error);
