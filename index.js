@@ -32,6 +32,10 @@ async function run() {
       .db("artAndCraftDB")
       .collection("artAndCraft");
 
+    const categoriesCollection = client
+      .db("categoriesDB")
+      .collection("categories");
+
     app.post("/artAndCraft", async (req, res) => {
       const newArtAndCraft = req.body;
       const result = await artAndCraftCollection.insertOne(newArtAndCraft);
@@ -39,22 +43,26 @@ async function run() {
     });
 
     app.get("/artAndCraft", async (req, res) => {
-      const cursor =  artAndCraftCollection.find();
+      const cursor = artAndCraftCollection.find();
       const results = await cursor.toArray();
       res.send(results);
     });
 
     app.get("/artAndCraft/craftDetails/:id", async (req, res) => {
       const id = req.params.id;
-      const result = await artAndCraftCollection.findOne({ _id: new ObjectId(id) });
+      const result = await artAndCraftCollection.findOne({
+        _id: new ObjectId(id),
+      });
       res.send(result);
     });
 
-   app.get("/artAndCraft/:id", async (req, res) => {
-     const id = req.params.id;
-     const result = await artAndCraftCollection.findOne({ _id: new ObjectId(id) });
-     res.send(result);
-   })
+    app.get("/artAndCraft/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await artAndCraftCollection.findOne({
+        _id: new ObjectId(id),
+      });
+      res.send(result);
+    });
     app.put("/artAndCraft/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
@@ -63,27 +71,49 @@ async function run() {
       const craft = {
         $set: {
           image: updatedCraft.image,
-          item_name : updatedCraft.item_name,
+          item_name: updatedCraft.item_name,
           // user_name : updatedCraft.user_name,
           // user_Email : updatedCraft.user_email,
-          subcategory_Name : updatedCraft.subcategory_Name,
-          rating : updatedCraft.rating,
-          customization : updatedCraft.customization,
-          description : updatedCraft.description,
-          stock_status : updatedCraft.stock_status,
-          processing_time : updatedCraft.processing_time,
-          price : updatedCraft.price
+          subcategory_Name: updatedCraft.subcategory_Name,
+          rating: updatedCraft.rating,
+          customization: updatedCraft.customization,
+          description: updatedCraft.description,
+          stock_status: updatedCraft.stock_status,
+          processing_time: updatedCraft.processing_time,
+          price: updatedCraft.price,
         },
       };
-      const result = await artAndCraftCollection.updateOne(filter, craft, option);
+      const result = await artAndCraftCollection.updateOne(
+        filter,
+        craft,
+        option
+      );
       res.send(result);
-      })
+    });
 
-    app.delete("/artAndCraft/:id", async (req, res) =>{
+    app.delete("/artAndCraft/:id", async (req, res) => {
       const id = req.params.id;
-      const result = await artAndCraftCollection.deleteOne({ _id: new ObjectId(id) });
+      const result = await artAndCraftCollection.deleteOne({
+        _id: new ObjectId(id),
+      });
       res.send(result);
-    })
+    });
+
+    // categories collection
+
+    app.get("/categories", async (req, res) => {
+      const cursor = categoriesCollection.find();
+      const results = await cursor.toArray();
+      res.send(results);
+    });
+
+    app.get("/artAndCraft/categories/:subCategory", async (req, res) => {
+      const subCategory = req.params.subCategory;
+      const result = await artAndCraftCollection
+        .find({ subcategory_Name: subCategory })
+        .toArray();
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
